@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bar·Restaurant El Segre — Llívia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500&display=swap">
+<style>
+:root{--noir:#0e0d0b;--creme:#f5f0e8;--or:#b89a5a;--or2:#d4b87a;--gris:#2a2925;--gm:#5a5650;--gl:#9a9590;--blanc:#fdfaf4}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--noir);color:var(--creme);font-family:'Raleway',-apple-system,sans-serif;font-weight:300;overflow-x:hidden;max-width:100vw}
+html,body{overscroll-behavior-x:none;touch-action:pan-y}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:72px;background:rgba(14,13,11,0.96);backdrop-filter:blur(8px);border-bottom:1px solid rgba(184,154,90,0.15)}
+.nav-logo{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1.3rem;font-weight:300;letter-spacing:.25em;color:var(–or);text-transform:uppercase}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(–creme);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;opacity:.75;transition:opacity .3s,color .3s}
+.nav-links a:hover{opacity:1;color:var(–or)}
+.nav-cta{border:1px solid var(–or);color:var(–or)!important;padding:8px 20px;opacity:1!important}
+.nav-cta:hover{background:var(–or)!important;color:var(–noir)!important}
+.lang-switch{display:flex;gap:6px;margin-left:1rem}
+.lang-btn{background:none;border:none;color:var(–gl);font-size:.62rem;letter-spacing:.15em;padding:4px;transition:color .3s}
+.lang-btn.active,.lang-btn:hover{color:var(–or)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:24px;height:1px;background:var(–creme);transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:0;right:-100%;bottom:0;width:min(300px,85%);background:var(–gris);z-index:99;padding:100px 40px 40px;display:flex;flex-direction:column;gap:2rem;transition:right .4s ease;border-left:1px solid rgba(184,154,90,.2);overflow-y:auto}
+.mobile-menu.open{right:0}
+.mobile-menu a{color:var(–creme);font-size:1.5rem;font-family:‘Cormorant Garamond’,Georgia,serif;opacity:.8;transition:opacity .2s,color .2s}
+.mobile-menu a:hover{opacity:1;color:var(–or)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:98;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;pointer-events:none}
+.overlay.open{opacity:1;visibility:visible;pointer-events:all}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(–noir);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .8s,visibility .8s}
+#loader.hidden{opacity:0;visibility:hidden}
+.loader-logo{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:2.5rem;letter-spacing:.3em;color:var(–or)}
+.loader-line{width:0;height:1px;background:var(–or);animation:ll 1.8s ease forwards}
+@keyframes ll{to{width:200px}}
+
+/* HERO */
+#hero{min-height:100vh;width:100%;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(–noir)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(120,80,20,.12),transparent 60%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(122,48,48,.08),transparent 50%)}
+.hero-lv{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(184,154,90,.2) 30%,rgba(184,154,90,.2) 70%,transparent);pointer-events:none}
+.hero-lv.l{left:12%}.hero-lv.r{right:12%}
+.hero-lh{position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(184,154,90,.15) 30%,rgba(184,154,90,.15) 70%,transparent);pointer-events:none}
+.hero-lh.t{top:25%}.hero-lh.b{bottom:20%}
+.hero-content{position:relative;text-align:center;z-index:2;padding:0 20px;animation:hfi 1.2s ease .5s both;width:100%}
+@keyframes hfi{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+.hero-eyebrow{font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(–or);margin-bottom:24px;opacity:.8}
+.hero-title{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:clamp(3rem,8vw,7rem);font-weight:300;line-height:.95;color:var(–blanc);margin-bottom:8px}
+.hero-title em{font-style:italic;color:var(–or)}
+.hero-sub{font-size:clamp(.8rem,2vw,1rem);letter-spacing:.3em;text-transform:uppercase;color:var(–gl);margin-bottom:56px}
+.hero-actions{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.btn-p{background:var(–or);color:var(–noir);border:none;padding:14px 36px;font-family:‘Raleway’,sans-serif;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;display:inline-block;transition:background .3s,transform .2s}
+.btn-p:hover{background:var(–or2);transform:translateY(-2px)}
+.btn-s{background:transparent;color:var(–creme);border:1px solid rgba(245,240,232,.3);padding:14px 36px;font-family:‘Raleway’,sans-serif;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;display:inline-block;transition:border-color .3s,color .3s,transform .2s}
+.btn-s:hover{border-color:var(–or);color:var(–or);transform:translateY(-2px)}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.4;animation:sb 2s ease-in-out infinite;cursor:pointer}
+@keyframes sb{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+.hero-scroll span{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase}
+.hs-line{width:1px;height:40px;background:linear-gradient(to bottom,var(–or),transparent)}
+
+/* SECTIONS */
+.sec-tag{font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(–or);margin-bottom:20px;display:flex;align-items:center;gap:16px}
+.sec-tag::before{content:’’;width:40px;height:1px;background:var(–or);flex-shrink:0}
+.sec-title{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:300;line-height:1.15;color:var(–blanc);margin-bottom:28px}
+.sec-title em{font-style:italic;color:var(–or)}
+.sec-body{color:var(–gl);line-height:1.9;font-size:.95rem;margin-bottom:32px}
+
+/* ABOUT */
+#sobre{padding:140px 5% 120px;overflow:hidden}
+.sobre-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.sobre-visual{position:relative}
+.simg{width:100%;aspect-ratio:4/5;background:linear-gradient(135deg,rgba(184,154,90,.1),var(–gris));display:flex;align-items:center;justify-content:center;overflow:hidden}
+.simg-txt{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:5rem;color:rgba(184,154,90,.2);text-align:center}
+.simg2{position:absolute;bottom:-30px;right:-30px;width:55%;aspect-ratio:1;background:var(–gris);border:6px solid var(–noir);display:flex;align-items:center;justify-content:center;font-size:3rem}
+.sbadge{position:absolute;top:-20px;left:-20px;width:100px;height:100px;background:var(–or);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:10}
+.sbadge-n{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:2rem;color:var(–noir);line-height:1}
+.sbadge-t{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(–noir);text-align:center}
+.stats{display:flex;gap:16px;margin-top:40px;padding-top:40px;border-top:1px solid rgba(184,154,90,.15)}
+.stat{flex:1;text-align:center}
+.stat-n{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:2.2rem;color:var(–or);display:block;line-height:1;margin-bottom:6px}
+.stat-l{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(–gl)}
+
+/* CARTA */
+#carta{padding:120px 5%;background:var(–gris);overflow:hidden}
+#carta::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(184,154,90,.3) 40%,rgba(184,154,90,.3) 60%,transparent)}
+#carta{position:relative}
+.carta-hdr{max-width:1200px;margin:0 auto 70px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.tabs{display:flex;border-bottom:1px solid rgba(184,154,90,.2)}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(–gl);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:12px 20px;margin-bottom:-1px;transition:color .3s,border-color .3s}
+.tab-btn.active{color:var(–or);border-bottom-color:var(–or)}
+.tab-btn:hover{color:var(–creme)}
+.mgrid{max-width:1200px;margin:0 auto;display:none}
+.mgrid.active{display:block}
+.mcat{margin-bottom:60px}
+.mcat-title{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1.1rem;letter-spacing:.25em;text-transform:uppercase;color:var(–or);margin-bottom:32px;display:flex;align-items:center;gap:20px}
+.mcat-title::after{content:’’;flex:1;height:1px;background:rgba(184,154,90,.2)}
+.mitems{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.mitem{padding:18px 0;border-bottom:1px solid rgba(245,240,232,.06);display:flex;justify-content:space-between;align-items:baseline;gap:12px;transition:padding-left .3s}
+.mitem:hover{padding-left:8px}
+.mitem:nth-child(odd){padding-right:28px}
+.mitem:nth-child(even){padding-left:28px;border-left:1px solid rgba(245,240,232,.06)}
+.iname{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1.05rem;color:var(–creme)}
+.idots{flex:1;border-bottom:1px dotted rgba(184,154,90,.2);min-width:16px;margin-bottom:4px}
+.iprice{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1rem;color:var(–or);font-style:italic;white-space:nowrap}
+.combo{margin-top:40px;padding:28px 36px;background:linear-gradient(135deg,rgba(184,154,90,.12),rgba(184,154,90,.04));border:1px solid rgba(184,154,90,.25);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative}
+.combo::before{content:‘★’;position:absolute;top:-12px;left:36px;background:var(–gris);padding:0 8px;color:var(–or)}
+.combo h4{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1.3rem;color:var(–blanc);margin-bottom:4px}
+.combo p{font-size:.8rem;color:var(–gl)}
+.combo-price{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:2.5rem;color:var(–or);font-style:italic}
+.wk-grid{max-width:1200px;margin:0 auto 60px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.wk-card{background:linear-gradient(135deg,rgba(122,48,48,.12),rgba(184,154,90,.06));border:1px solid rgba(184,154,90,.2);padding:36px;position:relative}
+.wk-card h3{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1.2rem;color:var(–blanc);margin-bottom:20px}
+.wk-card ul{list-style:none}
+.wk-card ul li{padding:8px 0;border-bottom:1px solid rgba(245,240,232,.06);font-size:.9rem;color:var(–gl);display:flex;gap:8px}
+.wk-card ul li::before{content:’—’;color:var(–or);flex-shrink:0}
+.wk-price{margin-top:20px;display:flex;align-items:baseline;gap:8px}
+.wk-price-n{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:2.8rem;color:var(–or);font-style:italic;line-height:1}
+.wk-price-u{font-size:.7rem;color:var(–gl)}
+.wk-inc{margin-top:10px;font-size:.75rem;color:var(–or);opacity:.7;font-style:italic}
+
+/* MAP */
+#galeria{padding:100px 5%;overflow:hidden}
+.map-hdr{max-width:1200px;margin:0 auto 48px;text-align:center}
+.map-wrap{max-width:1200px;margin:0 auto}
+.map-bar{display:flex;align-items:center;gap:16px;background:var(–gris);border:1px solid rgba(184,154,90,.2);border-bottom:none;padding:14px 22px;font-size:.8rem;color:var(–gl);flex-wrap:wrap}
+.map-dir{margin-left:auto;color:var(–or);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;transition:opacity .3s}
+.map-dir:hover{opacity:.7}
+#map{width:100%;height:460px;border:1px solid rgba(184,154,90,.2)}
+
+/* RESERVAS */
+#reservas{padding:120px 5%;background:var(–gris);position:relative;overflow:hidden}
+#reservas::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(184,154,90,.3) 40%,rgba(184,154,90,.3) 60%,transparent)}
+.res-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.res-details{margin-top:36px;display:flex;flex-direction:column;gap:20px}
+.det-row{display:flex;align-items:flex-start;gap:16px}
+.det-ico{width:38px;height:38px;border:1px solid rgba(184,154,90,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.95rem}
+.det-c h5{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(–or);margin-bottom:4px}
+.det-c p,.det-c a{font-size:.9rem;color:var(–gl);line-height:1.6;transition:color .3s}
+.det-c a:hover{color:var(–or)}
+.form-box{background:rgba(245,240,232,.03);border:1px solid rgba(184,154,90,.15);padding:44px 36px}
+.form-title{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1.5rem;color:var(–blanc);margin-bottom:28px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.fg label{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(–or);opacity:.8}
+.fg input,.fg select,.fg textarea{background:rgba(245,240,232,.04);border:1px solid rgba(184,154,90,.2);color:var(–creme);padding:11px 14px;font-family:‘Raleway’,sans-serif;font-size:.85rem;outline:none;transition:border-color .3s;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(–or)}
+.fg select option{background:var(–gris)}
+.fg textarea{resize:vertical;min-height:90px}
+.fsub{width:100%;background:var(–or);color:var(–noir);border:none;padding:15px;font-family:‘Raleway’,sans-serif;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;transition:background .3s;margin-top:6px}
+.fsub:hover{background:var(–or2)}
+.fsuccess{display:none;text-align:center;padding:20px;color:var(–or);font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1.3rem;font-style:italic}
+.wa-cta{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:12px 22px;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;font-weight:500;transition:opacity .3s,transform .2s;margin-top:16px}
+.wa-cta:hover{opacity:.9;transform:translateY(-2px)}
+
+/* CONTACT */
+#contacto{padding:100px 5% 60px;overflow:hidden}
+.cont-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:60px;padding-bottom:60px;border-bottom:1px solid rgba(184,154,90,.12)}
+.logo-big{font-family:‘Cormorant Garamond’,Georgia,serif;font-size:1.6rem;letter-spacing:.2em;color:var(–or);text-transform:uppercase;margin-bottom:14px}
+.cont-brand p{font-size:.85rem;color:var(–gl);line-height:1.8;margin-bottom:20px}
+.soc{display:flex;gap:10px}
+.soc-a{width:36px;height:36px;border:1px solid rgba(184,154,90,.3);display:flex;align-items:center;justify-content:center;color:var(–gl);font-size:.8rem;transition:border-color .3s,color .3s}
+.soc-a:hover{border-color:var(–or);color:var(–or)}
+.cont-col h4{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(–or);margin-bottom:20px}
+.cont-col ul{list-style:none}
+.cont-col ul li{margin-bottom:10px;font-size:.85rem;color:var(–gl);line-height:1.6}
+.cont-col ul li a{color:var(–gl);transition:color .3s}
+.cont-col ul li a:hover{color:var(–or)}
+footer{max-width:1200px;margin:0 auto;padding:28px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+footer p{font-size:.63rem;letter-spacing:.15em;color:var(–gm)}
+footer a{color:var(–gm);transition:color .3s}
+footer a:hover{color:var(–or)}
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:200;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;box-shadow:0 8px 32px rgba(37,211,102,.4);transition:transform .3s;animation:wap 3s ease-in-out infinite}
+@keyframes wap{0%,100%{box-shadow:0 8px 32px rgba(37,211,102,.35)}50%{box-shadow:0 8px 48px rgba(37,211,102,.6)}}
+.wa-float:hover{transform:scale(1.1)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s,transform .8s}
+.reveal.visible{opacity:1;transform:none}
+.rd1{transition-delay:.1s}.rd2{transition-delay:.2s}.rd3{transition-delay:.3s}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+.nav-links,.lang-switch{display:none}
+.hamburger{display:flex}
+.sobre-inner,.res-inner{grid-template-columns:1fr;gap:40px}
+.sobre-visual{display:none}
+.cont-inner{grid-template-columns:1fr 1fr}
+.wk-grid{grid-template-columns:1fr}
+.mitems{grid-template-columns:1fr}
+.mitem:nth-child(even){padding-left:0;border-left:none}
+}
+@media(max-width:600px){
+.cont-inner{grid-template-columns:1fr}
+.frow{grid-template-columns:1fr}
+.form-box{padding:28px 20px}
+#map{height:300px}
+.carta-hdr{flex-direction:column;align-items:flex-start}
+.tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-btn{padding:10px 14px;white-space:nowrap}
+}
+</style>
+
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">El Segre</div>
+  <div class="loader-line"></div>
+</div>
+
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">El Segre</a>
+  <ul class="nav-links">
+    <li><a href="#sobre" data-i18n="nav-sobre">Nosotros</a></li>
+    <li><a href="#carta" data-i18n="nav-carta">Carta</a></li>
+    <li><a href="#galeria" data-i18n="nav-galeria">Ubicación</a></li>
+    <li><a href="#reservas" class="nav-cta" data-i18n="nav-reservas">Reservar</a></li>
+  </ul>
+  <div class="lang-switch">
+    <button class="lang-btn active" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" onclick="setLang('ca')">CA</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+  </div>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#sobre" onclick="closeMenu()" data-i18n="nav-sobre">Nosotros</a>
+  <a href="#carta" onclick="closeMenu()" data-i18n="nav-carta">Carta</a>
+  <a href="#galeria" onclick="closeMenu()" data-i18n="nav-galeria">Ubicación</a>
+  <a href="#reservas" onclick="closeMenu()" data-i18n="nav-reservas">Reservar</a>
+</div>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lv l"></div><div class="hero-lv r"></div>
+  <div class="hero-lh t"></div><div class="hero-lh b"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" data-i18n="hero-eyebrow">Bar · Restaurant · Llívia, Girona</p>
+    <h1 class="hero-title">Bar·Restaurant<br><em>El Segre</em></h1>
+    <p class="hero-sub" data-i18n="hero-sub">Brasas · Tapas · Cocina de Mercado</p>
+    <div class="hero-actions">
+      <a href="#carta" class="btn-p" data-i18n="hero-cta1">Nuestra Carta</a>
+      <a href="#reservas" class="btn-s" data-i18n="hero-cta2">Reservar Mesa</a>
+    </div>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('sobre').scrollIntoView({behavior:'smooth'})">
+    <div class="hs-line"></div>
+    <span data-i18n="scroll">Scroll</span>
+  </div>
+</section>
+
+<section id="sobre">
+  <div class="sobre-inner">
+    <div class="sobre-visual">
+      <div class="simg"><div class="simg-txt">El<br>Segre</div></div>
+      <div class="simg2">🍷</div>
+      <div class="sbadge"><span class="sbadge-n">3.9</span><span class="sbadge-t">★ Google</span></div>
+    </div>
+    <div class="reveal">
+      <p class="sec-tag" data-i18n="about-tag">Quiénes somos</p>
+      <h2 class="sec-title" data-i18n="about-title">Una cocina<br>de <em>carácter</em></h2>
+      <p class="sec-body" data-i18n="about-p1">En el corazón de Llívia, el pueblo enclave español en territorio francés, el Bar·Restaurant El Segre es un espacio donde la tradición gallega se encuentra con el fuego lento y los productos de proximidad de la Cerdanya.</p>
+      <p class="sec-body" data-i18n="about-p2">Pulpo a la gallega, brasas de chuletón, tapas artesanas y una terraza íntima que invita a quedarse. Aquí cada plato cuenta una historia del territorio.</p>
+      <a href="#reservas" class="btn-p" data-i18n="about-cta">Reservar mesa</a>
+      <div class="stats">
+        <div class="stat"><span class="stat-n">248</span><span class="stat-l" data-i18n="stat1">Reseñas</span></div>
+        <div class="stat"><span class="stat-n">€10-20</span><span class="stat-l" data-i18n="stat2">Precio medio</span></div>
+        <div class="stat"><span class="stat-n">23h</span><span class="stat-l" data-i18n="stat3">Cierre</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="carta">
+  <div class="carta-hdr reveal">
+    <div>
+      <p class="sec-tag" data-i18n="menu-tag">La carta</p>
+      <h2 class="sec-title" data-i18n="menu-title">Sabores que<br><em>permanecen</em></h2>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('tapas',this)" data-i18n="tab-tapas">Tapas</button>
+      <button class="tab-btn" onclick="switchTab('carta',this)" data-i18n="tab-carta">Carta</button>
+      <button class="tab-btn" onclick="switchTab('finsemana',this)" data-i18n="tab-fw">Fin de Semana</button>
+      <button class="tab-btn" onclick="switchTab('bocadillos',this)" data-i18n="tab-boca">Bocadillos</button>
+    </div>
+  </div>
+
+  <div class="mgrid active" id="tab-tapas">
+    <div class="mcat">
+      <h3 class="mcat-title" data-i18n="cat-tapas">Tapas de la Casa</h3>
+      <div class="mitems">
+        <div class="mitem"><span class="iname">Patatas Bravas</span><span class="idots"></span><span class="iprice">6€</span></div>
+        <div class="mitem"><span class="iname">Calamares a la Romana</span><span class="idots"></span><span class="iprice">7€</span></div>
+        <div class="mitem"><span class="iname">Calamares a la Andaluza</span><span class="idots"></span><span class="iprice">7€</span></div>
+        <div class="mitem"><span class="iname">Croquetas Caseras XXL</span><span class="idots"></span><span class="iprice">2,50€/u</span></div>
+        <div class="mitem"><span class="iname">Pulpo a la Gallega</span><span class="idots"></span><span class="iprice">18€</span></div>
+        <div class="mitem"><span class="iname">Oreja de Cerdo a la Gallega</span><span class="idots"></span><span class="iprice">9€</span></div>
+        <div class="mitem"><span class="iname">Alitas de Pollo Caseras</span><span class="idots"></span><span class="iprice">7€</span></div>
+        <div class="mitem"><span class="iname">Callos al Estilo de la Abuela</span><span class="idots"></span><span class="iprice">6,50€</span></div>
+        <div class="mitem"><span class="iname">Anchoas y Pan con Tomate</span><span class="idots"></span><span class="iprice">8,50€</span></div>
+        <div class="mitem"><span class="iname">Boquerones Aliñados</span><span class="idots"></span><span class="iprice">6,50€</span></div>
+      </div>
+    </div>
+    <div class="combo">
+      <div><h4 data-i18n="combo-title">Combo Aperitivo</h4><p data-i18n="combo-desc">Berberechos · Mejillones · Aceitunas · 2 Vermouths</p></div>
+      <div class="combo-price">18€</div>
+    </div>
+  </div>
+
+  <div class="mgrid" id="tab-carta">
+    <div class="mcat">
+      <h3 class="mcat-title" data-i18n="cat-entrantes">Entrantes</h3>
+      <div class="mitems">
+        <div class="mitem"><span class="iname">Ensalada de Queso de Cabra</span><span class="idots"></span><span class="iprice">12€</span></div>
+        <div class="mitem"><span class="iname">Ensalada de Salmón Ahumado</span><span class="idots"></span><span class="iprice">12,50€</span></div>
+        <div class="mitem"><span class="iname">Ensalada César con Bacon</span><span class="idots"></span><span class="iprice">11,50€</span></div>
+        <div class="mitem"><span class="iname">Surtido de Embutidos Variados</span><span class="idots"></span><span class="iprice">19€</span></div>
+        <div class="mitem"><span class="iname">Surtido de Quesos Variados</span><span class="idots"></span><span class="iprice">18€</span></div>
+      </div>
+    </div>
+    <div class="mcat">
+      <h3 class="mcat-title" data-i18n="cat-pastas">Pastas</h3>
+      <div class="mitems">
+        <div class="mitem"><span class="iname">Canelones de la Casa</span><span class="idots"></span><span class="iprice">12€</span></div>
+        <div class="mitem"><span class="iname">Pasta Boloñesa</span><span class="idots"></span><span class="iprice">8,50€</span></div>
+        <div class="mitem"><span class="iname">Pasta Carbonara</span><span class="idots"></span><span class="iprice">9€</span></div>
+      </div>
+    </div>
+    <div class="mcat">
+      <h3 class="mcat-title" data-i18n="cat-carnes">Carnes a la Brasa</h3>
+      <div class="mitems">
+        <div class="mitem"><span class="iname">Entrecot 500g</span><span class="idots"></span><span class="iprice">28,50€</span></div>
+        <div class="mitem"><span class="iname">Chuletón +1Kg</span><span class="idots"></span><span class="iprice">53€/Kg</span></div>
+        <div class="mitem"><span class="iname">Magret de Pato</span><span class="idots"></span><span class="iprice">23,50€</span></div>
+        <div class="mitem"><span class="iname">Codorniz a la Brasa</span><span class="idots"></span><span class="iprice">14,50€</span></div>
+        <div class="mitem"><span class="iname">Pollo a la Brasa</span><span class="idots"></span><span class="iprice">12€</span></div>
+        <div class="mitem"><span class="iname">Pies de Cerdo a la Brasa</span><span class="idots"></span><span class="iprice">14€</span></div>
+        <div class="mitem"><span class="iname">Xai de la Cerdanya a la Brasa</span><span class="idots"></span><span class="iprice">22,50€</span></div>
+        <div class="mitem"><span class="iname">Conejo a la Brasa</span><span class="idots"></span><span class="iprice">17€</span></div>
+        <div class="mitem"><span class="iname">Tabla de Carnes Mixtas</span><span class="idots"></span><span class="iprice">23€/pp</span></div>
+      </div>
+    </div>
+    <div class="mcat">
+      <h3 class="mcat-title" data-i18n="cat-pescados">Pescados</h3>
+      <div class="mitems">
+        <div class="mitem"><span class="iname">Calamares a la Plancha</span><span class="idots"></span><span class="iprice">16€</span></div>
+        <div class="mitem"><span class="iname">Sepia a la Plancha</span><span class="idots"></span><span class="iprice">16,50€</span></div>
+        <div class="mitem"><span class="iname">Bacalao a la Plancha</span><span class="idots"></span><span class="iprice">20€</span></div>
+        <div class="mitem"><span class="iname">Bacalao con Salsa Verde</span><span class="idots"></span><span class="iprice">20€</span></div>
+        <div class="mitem"><span class="iname">Gambas a la Plancha</span><span class="idots"></span><span class="iprice">20€</span></div>
+        <div class="mitem"><span class="iname">Pulpo a la Brasa</span><span class="idots"></span><span class="iprice">22,50€</span></div>
+        <div class="mitem"><span class="iname">Parrillada de Pescados</span><span class="idots"></span><span class="iprice">25€</span></div>
+        <div class="mitem"><span class="iname">Calamares a la Andaluza</span><span class="idots"></span><span class="iprice">16,50€</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mgrid" id="tab-finsemana">
+    <div class="wk-grid">
+      <div class="wk-card">
+        <h3 data-i18n="fw-primeros">Primeros</h3>
+        <ul>
+          <li>Mejillones al Vapor</li><li>Trinchat de la Cerdanya</li>
+          <li>Ensalada de Queso de Cabra</li><li>Tagliatelle con Salsa Marinera</li>
+          <li>Gambas a la Plancha</li>
+        </ul>
+      </div>
+      <div class="wk-card">
+        <h3 data-i18n="fw-segundos">Segundos</h3>
+        <ul>
+          <li>Parrillada de Pescado</li><li>Parrillada de Carnes</li>
+          <li>Pollo a la Brasa</li><li>Bacalao con Salsa Verde y Almejas</li>
+          <li>Entrecot a la Brasa</li>
+        </ul>
+        <div class="wk-price"><span class="wk-price-n">35€</span><span class="wk-price-u" data-i18n="per-person">/ persona</span></div>
+        <p class="wk-inc" data-i18n="fw-includes">IVA incluido · Bebida no incluida</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mgrid" id="tab-bocadillos">
+    <div class="mcat">
+      <h3 class="mcat-title" data-i18n="cat-frios">Bocadillos Fríos</h3>
+      <div class="mitems">
+        <div class="mitem"><span class="iname">Jamón Ibérico</span><span class="idots"></span><span class="iprice">9,50€</span></div>
+        <div class="mitem"><span class="iname">Jamón del País</span><span class="idots"></span><span class="iprice">6€</span></div>
+        <div class="mitem"><span class="iname">Queso Manchego</span><span class="idots"></span><span class="iprice">6€</span></div>
+        <div class="mitem"><span class="iname">Longaniza</span><span class="idots"></span><span class="iprice">7€</span></div>
+        <div class="mitem"><span class="iname">Chorizo</span><span class="idots"></span><span class="iprice">7€</span></div>
+        <div class="mitem"><span class="iname">Mixto</span><span class="idots"></span><span class="iprice">8,50€</span></div>
+      </div>
+    </div>
+    <div class="mcat">
+      <h3 class="mcat-title" data-i18n="cat-calientes">Bocadillos Calientes</h3>
+      <div class="mitems">
+        <div class="mitem"><span class="iname">Bacon</span><span class="idots"></span><span class="iprice">6,80€</span></div>
+        <div class="mitem"><span class="iname">Lomo</span><span class="idots"></span><span class="iprice">7€</span></div>
+        <div class="mitem"><span class="iname">Butifarra</span><span class="idots"></span><span class="iprice">7€</span></div>
+        <div class="mitem"><span class="iname">Calamares a la Romana</span><span class="idots"></span><span class="iprice">7,50€</span></div>
+        <div class="mitem"><span class="iname">Hamburguesa</span><span class="idots"></span><span class="iprice">9,50€</span></div>
+        <div class="mitem"><span class="iname">Sobrasada Llorenc</span><span class="idots"></span><span class="iprice">7€</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="galeria">
+  <div class="map-hdr reveal">
+    <p class="sec-tag" style="justify-content:center" data-i18n="gallery-tag">Ubicación</p>
+    <h2 class="sec-title" style="text-align:center" data-i18n="gallery-title">Encuéntranos<br><em>en Llívia</em></h2>
+  </div>
+  <div class="map-wrap reveal">
+    <div class="map-bar">
+      <span>📍</span>
+      <span>Carrer del Raval, 59 · 17527 Llívia, Girona</span>
+      <a href="https://maps.app.goo.gl/rVLykbcQBKTuniwV7" target="_blank" class="map-dir" data-i18n="map-directions">Cómo llegar →</a>
+    </div>
+    <div id="map"></div>
+  </div>
+</section>
+
+<section id="reservas">
+  <div class="res-inner">
+    <div class="reveal">
+      <p class="sec-tag" data-i18n="res-tag">Reservaciones</p>
+      <h2 class="sec-title" data-i18n="res-title">Reserve su<br><em>mesa</em></h2>
+      <p class="sec-body" data-i18n="res-body">Le esperamos en nuestra terraza o en el acogedor interior. Para grupos y eventos especiales, contáctenos por WhatsApp.</p>
+      <div class="res-details">
+        <div class="det-row"><div class="det-ico">📍</div><div class="det-c"><h5 data-i18n="detail-dir">Dirección</h5><p>Carrer del Raval, 59<br>17527 Llívia, Girona</p></div></div>
+        <div class="det-row"><div class="det-ico">⏰</div><div class="det-c"><h5 data-i18n="detail-hor">Horario</h5><p data-i18n="horario">Abierto todos los días · Cierra 23:00h</p></div></div>
+        <div class="det-row"><div class="det-ico">📞</div><div class="det-c"><h5 data-i18n="detail-tel">Teléfono</h5><a href="tel:+34872010853">+34 872 01 08 53</a></div></div>
+        <div class="det-row"><div class="det-ico">📷</div><div class="det-c"><h5>Instagram</h5><a href="https://instagram.com/segrellivia" target="_blank">@segrellivia</a></div></div>
+      </div>
+      <a href="https://wa.me/34872010853" target="_blank" class="wa-cta" style="margin-top:24px">💬 <span data-i18n="wa-btn">Reservar por WhatsApp</span></a>
+    </div>
+    <div class="form-box reveal rd2">
+      <h3 class="form-title" data-i18n="form-title">Solicitar Reserva</h3>
+      <div id="fContainer">
+        <div class="frow">
+          <div class="fg"><label data-i18n="form-name">Nombre</label><input type="text" id="fname" placeholder="Su nombre"></div>
+          <div class="fg"><label data-i18n="form-phone">Teléfono</label><input type="tel" id="fphone" placeholder="+34 600 000 000"></div>
+        </div>
+        <div class="fg"><label data-i18n="form-email">Email</label><input type="email" id="femail" placeholder="correo@ejemplo.com"></div>
+        <div class="frow">
+          <div class="fg"><label data-i18n="form-date">Fecha</label><input type="date" id="fdate"></div>
+          <div class="fg"><label data-i18n="form-time">Hora</label><input type="time" id="ftime"></div>
+        </div>
+        <div class="fg">
+          <label data-i18n="form-guests">Comensales</label>
+          <select id="fguests">
+            <option value="">— Seleccionar —</option>
+            <option>1 persona</option><option>2 personas</option><option>3 personas</option>
+            <option>4 personas</option><option>5 personas</option><option>6 personas</option>
+            <option>7-10 personas</option><option>+10 personas (grupo)</option>
+          </select>
+        </div>
+        <div class="fg"><label data-i18n="form-notes">Notas</label><textarea id="fnotes" placeholder="Alergias, ocasión especial..."></textarea></div>
+        <button class="fsub" onclick="submitRes()" data-i18n="form-submit">Enviar Reserva</button>
+      </div>
+      <div class="fsuccess" id="fsuccess"><p data-i18n="form-ok">✓ Reserva recibida. Le confirmaremos en breve.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="cont-inner">
+    <div class="cont-brand reveal">
+      <div class="logo-big">El Segre</div>
+      <p data-i18n="footer-desc">Bar·Restaurant en el corazón de Llívia. Brasas, tapas gallegas y el mejor producto de la Cerdanya.</p>
+      <div class="soc">
+        <a href="https://instagram.com/segrellivia" target="_blank" class="soc-a">IG</a>
+        <a href="https://wa.me/34872010853" target="_blank" class="soc-a">WA</a>
+        <a href="tel:+34872010853" class="soc-a">☎</a>
+      </div>
+    </div>
+    <div class="cont-col reveal rd1">
+      <h4 data-i18n="footer-nav">Navegación</h4>
+      <ul>
+        <li><a href="#sobre" data-i18n="nav-sobre">Nosotros</a></li>
+        <li><a href="#carta" data-i18n="nav-carta">Carta</a></li>
+        <li><a href="#galeria" data-i18n="nav-galeria">Ubicación</a></li>
+        <li><a href="#reservas" data-i18n="nav-reservas">Reservas</a></li>
+      </ul>
+    </div>
+    <div class="cont-col reveal rd2">
+      <h4 data-i18n="footer-info">Información</h4>
+      <ul>
+        <li>Carrer del Raval, 59</li>
+        <li>17527 Llívia, Girona</li>
+        <li><a href="tel:+34872010853">+34 872 01 08 53</a></li>
+        <li data-i18n="horario-short">Abierto · Cierra 23:00h</li>
+      </ul>
+    </div>
+  </div>
+  <footer>
+    <p>© 2024 Bar·Restaurant El Segre · Llívia, Girona</p>
+    <p><a href="https://instagram.com/segrellivia" target="_blank">@segrellivia</a></p>
+  </footer>
+</section>
+
+<a href="https://wa.me/34872010853" target="_blank" class="wa-float" aria-label="WhatsApp">💬</a>
+
+<script>
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('hidden')},1800)});
+
+const ham=document.getElementById('hamburger'),mm=document.getElementById('mobileMenu'),ov=document.getElementById('overlay');
+ham.addEventListener('click',()=>{ham.classList.toggle('open');mm.classList.toggle('open');ov.classList.toggle('open')});
+function closeMenu(){ham.classList.remove('open');mm.classList.remove('open');ov.classList.remove('open')}
+
+const nb=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{nb.style.background=window.scrollY>60?'rgba(14,13,11,0.98)':'rgba(14,13,11,0.96)'});
+
+function switchTab(id,btn){
+  document.querySelectorAll('.mgrid').forEach(g=>g.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+const els=document.querySelectorAll('.reveal');
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:0.1});
+els.forEach(el=>io.observe(el));
+
+function submitRes(){
+  const n=document.getElementById('fname').value.trim();
+  const p=document.getElementById('fphone').value.trim();
+  const d=document.getElementById('fdate').value;
+  const g=document.getElementById('fguests').value;
+  if(!n||!p||!d||!g){alert('Por favor complete los campos obligatorios.');return}
+  document.getElementById('fContainer').style.display='none';
+  document.getElementById('fsuccess').style.display='block';
+  const msg=encodeURIComponent('*Nueva Reserva - El Segre*\n\nNombre: '+n+'\nTeléfono: '+p+'\nFecha: '+d+'\nComensales: '+g+'\nNotas: '+document.getElementById('fnotes').value);
+  window.open('https://wa.me/34872010853?text='+msg,'_blank');
+}
+
+function initMap(){
+  const loc={lat:42.4668,lng:1.9777};
+  const styles=[
+    {elementType:'geometry',stylers:[{color:'#1a1915'}]},
+    {elementType:'labels.text.stroke',stylers:[{color:'#1a1915'}]},
+    {elementType:'labels.text.fill',stylers:[{color:'#9a9590'}]},
+    {featureType:'administrative.locality',elementType:'labels.text.fill',stylers:[{color:'#b89a5a'}]},
+    {featureType:'poi',elementType:'labels.text.fill',stylers:[{color:'#9a9590'}]},
+    {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#232b1e'}]},
+    {featureType:'road',elementType:'geometry',stylers:[{color:'#2a2925'}]},
+    {featureType:'road',elementType:'labels.text.fill',stylers:[{color:'#9a9590'}]},
+    {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#3a3525'}]},
+    {featureType:'road.highway',elementType:'labels.text.fill',stylers:[{color:'#b89a5a'}]},
+    {featureType:'water',elementType:'geometry',stylers:[{color:'#0e0d12'}]},
+    {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#3a5068'}]}
+  ];
+  const map=new google.maps.Map(document.getElementById('map'),{center:loc,zoom:17,styles:styles,mapTypeControl:false,gestureHandling:'cooperative'});
+  const marker=new google.maps.Marker({position:loc,map:map,title:'Bar·Restaurant El Segre',icon:{path:'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z',fillColor:'#b89a5a',fillOpacity:1,strokeColor:'#0e0d0b',strokeWeight:1.5,scale:2,anchor:new google.maps.Point(12,22)},animation:google.maps.Animation.DROP});
+  const iw=new google.maps.InfoWindow({content:'<div style="background:#2a2925;padding:14px 18px;border:1px solid rgba(184,154,90,.3);min-width:200px;font-family:Georgia,serif"><div style="color:#b89a5a;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px">Bar · Restaurant</div><div style="color:#fdfaf4;font-size:1.1rem;margin-bottom:6px">El Segre</div><div style="color:#9a9590;font-size:.8rem;line-height:1.5;margin-bottom:10px">Carrer del Raval, 59<br>17527 Llívia, Girona</div><a href="https://maps.app.goo.gl/rVLykbcQBKTuniwV7" target="_blank" style="display:inline-block;background:#b89a5a;color:#0e0d0b;padding:7px 14px;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase">Cómo llegar →</a></div>'});
+  iw.open(map,marker);
+  marker.addListener('click',()=>iw.open(map,marker));
+}
+
+// I18N
+const T={
+  es:{'nav-sobre':'Nosotros','nav-carta':'Carta','nav-galeria':'Ubicación','nav-reservas':'Reservar','hero-eyebrow':'Bar · Restaurant · Llívia, Girona','hero-sub':'Brasas · Tapas · Cocina de Mercado','hero-cta1':'Nuestra Carta','hero-cta2':'Reservar Mesa','scroll':'Scroll','about-tag':'Quiénes somos','about-title':'Una cocina de carácter','about-p1':'En el corazón de Llívia, el pueblo enclave español en territorio francés, el Bar·Restaurant El Segre es un espacio donde la tradición gallega se encuentra con el fuego lento y los productos de proximidad de la Cerdanya.','about-p2':'Pulpo a la gallega, brasas de chuletón, tapas artesanas y una terraza íntima que invita a quedarse.','about-cta':'Reservar mesa','stat1':'Reseñas','stat2':'Precio medio','stat3':'Cierre','menu-tag':'La carta','menu-title':'Sabores que permanecen','tab-tapas':'Tapas','tab-carta':'Carta','tab-fw':'Fin de Semana','tab-boca':'Bocadillos','cat-tapas':'Tapas de la Casa','combo-title':'Combo Aperitivo','combo-desc':'Berberechos · Mejillones · Aceitunas · 2 Vermouths','cat-entrantes':'Entrantes','cat-pastas':'Pastas','cat-carnes':'Carnes a la Brasa','cat-pescados':'Pescados','cat-frios':'Bocadillos Fríos','cat-calientes':'Bocadillos Calientes','fw-primeros':'Primeros','fw-segundos':'Segundos','per-person':'/ persona','fw-includes':'IVA incluido · Bebida no incluida','gallery-tag':'Ubicación','gallery-title':'Encuéntranos en Llívia','map-directions':'Cómo llegar →','res-tag':'Reservaciones','res-title':'Reserve su mesa','res-body':'Le esperamos en nuestra terraza o en el acogedor interior.','detail-dir':'Dirección','detail-hor':'Horario','detail-tel':'Teléfono','horario':'Abierto todos los días · Cierra 23:00h','wa-btn':'Reservar por WhatsApp','form-title':'Solicitar Reserva','form-name':'Nombre','form-phone':'Teléfono','form-email':'Email','form-date':'Fecha','form-time':'Hora','form-guests':'Comensales','form-notes':'Notas','form-submit':'Enviar Reserva','form-ok':'✓ Reserva recibida. Le confirmaremos en breve.','footer-desc':'Bar·Restaurant en el corazón de Llívia. Brasas, tapas gallegas y el mejor producto de la Cerdanya.','footer-nav':'Navegación','footer-info':'Información','horario-short':'Abierto · Cierra 23:00h'},
+  en:{'nav-sobre':'About','nav-carta':'Menu','nav-galeria':'Location','nav-reservas':'Reserve','hero-eyebrow':'Bar · Restaurant · Llívia, Girona','hero-sub':'Grills · Tapas · Market Cuisine','hero-cta1':'Our Menu','hero-cta2':'Book a Table','scroll':'Scroll','about-tag':'About us','about-title':'A kitchen with character','about-p1':'In the heart of Llívia, the Spanish enclave in French territory, Bar·Restaurant El Segre blends Galician tradition with slow fire and local Cerdanya produce.','about-p2':'Galician octopus, charcoal-grilled cuts, artisan tapas and an intimate terrace.','about-cta':'Book a table','stat1':'Reviews','stat2':'Avg. price','stat3':'Closing','menu-tag':'The menu','menu-title':'Flavours that stay','tab-tapas':'Tapas','tab-carta':'À la carte','tab-fw':'Weekend Menu','tab-boca':'Sandwiches','cat-tapas':'House Tapas','combo-title':'Aperitivo Combo','combo-desc':'Cockles · Mussels · Olives · 2 Vermouths','cat-entrantes':'Starters','cat-pastas':'Pasta','cat-carnes':'Charcoal Grills','cat-pescados':'Fish & Seafood','cat-frios':'Cold Sandwiches','cat-calientes':'Hot Sandwiches','fw-primeros':'First Courses','fw-segundos':'Main Courses','per-person':'/ person','fw-includes':'VAT incl. · Drinks not included','gallery-tag':'Location','gallery-title':'Find us in Llívia','map-directions':'Get directions →','res-tag':'Reservations','res-title':'Book your table','res-body':'We look forward to welcoming you on our terrace or in our dining room.','detail-dir':'Address','detail-hor':'Hours','detail-tel':'Phone','horario':'Open every day · Closes at 23:00','wa-btn':'Book via WhatsApp','form-title':'Request a Reservation','form-name':'Name','form-phone':'Phone','form-email':'Email','form-date':'Date','form-time':'Time','form-guests':'Guests','form-notes':'Notes','form-submit':'Send Request','form-ok':'✓ Reservation received. We will confirm shortly.','footer-desc':'Bar·Restaurant in the heart of Llívia. Grills, Galician tapas and the finest Cerdanya produce.','footer-nav':'Navigation','footer-info':'Information','horario-short':'Open · Closes 23:00'},
+  ca:{'nav-sobre':'Nosaltres','nav-carta':'Carta','nav-galeria':'Ubicació','nav-reservas':'Reservar','hero-eyebrow':'Bar · Restaurant · Llívia, Girona','hero-sub':'Brases · Tapes · Cuina de Mercat','hero-cta1':'La nostra Carta','hero-cta2':'Reservar Taula','scroll':'Desplaça','about-tag':'Qui som','about-title':'Una cuina de caràcter','about-p1':'Al cor de Llívia, el poble enclavat espanyol en territori francès, el Bar·Restaurant El Segre és un espai on la tradició gallega es troba amb el foc lent i els productes de proximitat de la Cerdanya.','about-p2':'Pop a la gallega, brases de xai, tapes artesanes i una terrassa íntima.','about-cta':'Reservar taula','stat1':'Ressenyes','stat2':'Preu mitjà','stat3':'Tancament','menu-tag':'La carta','menu-title':'Sabors que romanen','tab-tapas':'Tapes','tab-carta':'Carta','tab-fw':'Cap de Setmana','tab-boca':'Entrepans','cat-tapas':'Tapes de la Casa','combo-title':'Combo Aperitiu','combo-desc':'Berberetxos · Musclos · Olives · 2 Vermuts','cat-entrantes':'Entrants','cat-pastas':'Pastes','cat-carnes':'Carns a la Brasa','cat-pescados':'Peixos','cat-frios':'Entrepans Freds','cat-calientes':'Entrepans Calents','fw-primeros':'Primers','fw-segundos':'Segons','per-person':'/ persona','fw-includes':'IVA inclòs · Beguda no inclosa','gallery-tag':'Ubicació','gallery-title':'Troba\'ns a Llívia','map-directions':'Com arribar →','res-tag':'Reserves','res-title':'Reserveu la vostra taula','res-body':'Us esperem a la nostra terrassa o al confortable interior.','detail-dir':'Adreça','detail-hor':'Horari','detail-tel':'Telèfon','horario':'Obert tots els dies · Tanca 23:00h','wa-btn':'Reservar per WhatsApp','form-title':'Sol·licitar Reserva','form-name':'Nom','form-phone':'Telèfon','form-email':'Correu','form-date':'Data','form-time':'Hora','form-guests':'Comensals','form-notes':'Notes','form-submit':'Enviar Reserva','form-ok':'✓ Reserva rebuda. Us confirmarem aviat.','footer-desc':'Bar·Restaurant al cor de Llívia. Brases, tapes gallegues i el millor producte de la Cerdanya.','footer-nav':'Navegació','footer-info':'Informació','horario-short':'Obert · Tanca 23:00h'},
+  fr:{'nav-sobre':'À propos','nav-carta':'Carte','nav-galeria':'Emplacement','nav-reservas':'Réserver','hero-eyebrow':'Bar · Restaurant · Llívia, Gérone','hero-sub':'Brasas · Tapas · Cuisine de Marché','hero-cta1':'Notre Carte','hero-cta2':'Réserver une Table','scroll':'Défiler','about-tag':'Qui sommes-nous','about-title':'Une cuisine de caractère','about-p1':'Au cœur de Llívia, l\'enclave espagnole en territoire français, le Bar·Restaurant El Segre unit tradition galicienne, feu lent et produits locaux de la Cerdagne.','about-p2':'Poulpe à la galicienne, braises, tapas artisanales et terrasse intime.','about-cta':'Réserver une table','stat1':'Avis','stat2':'Prix moyen','stat3':'Fermeture','menu-tag':'La carte','menu-title':'Des saveurs qui restent','tab-tapas':'Tapas','tab-carta':'À la carte','tab-fw':'Menu Week-end','tab-boca':'Sandwichs','cat-tapas':'Tapas de la maison','combo-title':'Combo Apéritif','combo-desc':'Coques · Moules · Olives · 2 Vermouths','cat-entrantes':'Entrées','cat-pastas':'Pâtes','cat-carnes':'Viandes au Charbon','cat-pescados':'Poissons','cat-frios':'Sandwichs Froids','cat-calientes':'Sandwichs Chauds','fw-primeros':'Premiers Plats','fw-segundos':'Plats Principaux','per-person':'/ personne','fw-includes':'TVA incluse · Boissons non incluses','gallery-tag':'Emplacement','gallery-title':'Trouvez-nous à Llívia','map-directions':'Itinéraire →','res-tag':'Réservations','res-title':'Réservez votre table','res-body':'Nous vous attendons sur notre terrasse ou en salle.','detail-dir':'Adresse','detail-hor':'Horaires','detail-tel':'Téléphone','horario':'Ouvert tous les jours · Ferme à 23h00','wa-btn':'Réserver par WhatsApp','form-title':'Demande de Réservation','form-name':'Nom','form-phone':'Téléphone','form-email':'Email','form-date':'Date','form-time':'Heure','form-guests':'Convives','form-notes':'Remarques','form-submit':'Envoyer la Demande','form-ok':'✓ Réservation reçue. Nous confirmerons bientôt.','footer-desc':'Bar·Restaurant au cœur de Llívia. Braises, tapas galiciennes et les meilleurs produits de la Cerdagne.','footer-nav':'Navigation','footer-info':'Informations','horario-short':'Ouvert · Ferme 23h00'}
+};
+let lang='es';
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===l));
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const t=T[l][el.getAttribute('data-i18n')];if(t)el.textContent=t});
+}
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgu88uSs98vbzwIU57NPuS3DiVdHsnR0Q&callback=initMap"></script>
+
+</body>
+</html>
